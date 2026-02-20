@@ -193,7 +193,7 @@
   // PASTE YOUR APPS SCRIPT WEB APP URL BELOW
   // It looks like: https://script.google.com/macros/s/ABC.../exec
   // =====================================================
-  var API_URL = 'https://script.google.com/macros/s/AKfycbwv-20lYwNQSzYNiyGTS10P1lZ45wPuFBNIolA8jEyBXR7PSZ6Z4YpMsGc4WAEOVt60/exec';
+  var API_URL = 'https://script.google.com/macros/s/AKfycbx22ENaD-tw9iDYz8GIOxrW8ZZOwwqVnwouTdjBExQg1Ith_srk13E_5DaRdKQKT0El/exec';
   // =====================================================
 
   var userData = {};
@@ -215,14 +215,6 @@
     return fetch(url).then(function(r) { return r.json(); });
   }
 
-  function apiPost(body) {
-    return fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(body)
-    }).then(function(r) { return r.json(); });
-  }
-
   // --- Login ---
 
   function handleLogin() {
@@ -240,7 +232,7 @@
     document.getElementById('loginBtn').disabled = true;
     showLoading();
 
-    apiPost({ action: 'authenticate', name: name, password: pass })
+    apiGet({ action: 'authenticate', name: name, password: pass })
       .then(function(result) {
         if (result.success) {
           userData = result;
@@ -338,12 +330,14 @@
     document.getElementById('submitBtn').disabled = true;
     showLoading();
 
-    apiPost({
+    apiGet({
       action: 'submit',
-      name: userData.name,
-      group: userData.group,
-      round: currentRound,
-      answers: answers
+      data: JSON.stringify({
+        name: userData.name,
+        group: userData.group,
+        round: currentRound,
+        answers: answers
+      })
     })
       .then(function(result) {
         hideLoading();
